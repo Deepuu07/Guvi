@@ -42,5 +42,13 @@ export const home={
     "RewardsPageText" : ".mb-3",
     "Referral" : ".icons-Referral",
     "ReferralpageText" : ".referal-heading-2",
-    "Forum" : ".icons-forum"
+    "Forum" : ".icons-forum",
+    "AtomicLibraryMessage" : "[class='d-none d-md-block']",
+    "AtomicLibraryParent" : "#atomicLib",
+    "AtomicCourses" : "[class='course-tag atomic']",
+    "AtomicFreeCourse" : ".freeCourseCustom",
+    "EssentialLibraryParent" : "#essentialLib",
+    "EssentialCourses" : "[class='course-tag essential']",
+    "EssentialFreeCourse" : ".freeCourseCustom"
+
 }

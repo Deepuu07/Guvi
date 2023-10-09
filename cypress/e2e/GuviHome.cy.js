@@ -14,66 +14,105 @@ describe('Guvi Home', ()=>{
     })
 
     beforeEach( ()=>{
-        cy.visit(Cypress.env('Lpage'));
-        cy.get(Log.EmailInputField).type(Cypress.env('Email')).should('have.value', Cypress.env('Email'));
-        cy.get(Log.PasswordInputField).type(Cypress.env('Password')).should('have.value', Cypress.env('Password'));
-        cy.get(Log.loginButton).click(); 
+
+        cy.session('login', ()=>{
+            a.Login();
+            cy.get(Log.EmailInputField).type(Cypress.env('Email')).should('have.value', Cypress.env('Email'));
+            cy.get(Log.PasswordInputField).type(Cypress.env('Password')).should('have.value', Cypress.env('Password'));
+            cy.get(Log.loginButton).click(); 
+            cy.wait(3000);
+        }
+        )
+       
     })
 
-    it('Check url, title and pop up', ()=>{
-        a.CheckcoursesUrl_Title()
+    it('Test home page url', ()=>{
+        a.Login();
+        cy.url().should('include', 'https://www.guvi.in/courses/')
+    })
+
+    it('Test home page title', ()=>{
+        a.Login();
+        cy.title().should('eq', 'GUVI | courses')
+    })
+
+    it('Test home page pop up', ()=>{
+        a.Login();
         cy.wait(5000);
-  
-    cy.get('.course-mainhead').then((body) => {
-    if (body.find(home.popup).length == 1) {
-        cy.get(home.gender).select('Male').should('have.value', 'Male')
-        cy.get(home.country).click().type('india').type('{enter}')
-        cy.get(home.state).click().type('tamil nadu').type('{enter}')
-        cy.get(home.city).click().type('arcot').type('{enter}')
-        a.continue()
-        cy.get(home.degree).select('M.E/M.Tech')
-        a.continue()
-        cy.get(home.department).select('Information Technology')
-        a.continue()
-        cy.get(home.profile).select('Working Professional')
-        cy.get(home.company).type('Maximl')
-        cy.get(home.role).type('QA Intern')
-        cy.get(home.location).type('Bengaluru')
-        cy.get(home.experience).select('0 - 1')
-        a.continue()
-        cy.get(home.skills).type('javascript').type('{enter}')
-        .type('cypress').type('{enter}')
-        a.continue()
-        cy.get(home.codingProfile).select('Beginner')
-        cy.get(home.reference).select('Word of Mouth')
-        cy.get(home.Interest).click().type('Software Testing and Automation').type('{enter}')
-        a.continue()
-    }
-
-    else{
-        cy.log("pop up not visible")
-    }
+        cy.get('.course-mainhead').then((body) => {
+            if (body.find(home.popup).length == 1) {
+                cy.get(home.gender).select('Male').should('have.value', 'Male')
+                cy.get(home.country).click().type('india').type('{enter}')
+                cy.get(home.state).click().type('tamil nadu').type('{enter}')
+                cy.get(home.city).click().type('arcot').type('{enter}')
+                a.continue()
+                cy.get(home.degree).select('M.E/M.Tech')
+                a.continue()
+                cy.get(home.department).select('Information Technology')
+                a.continue()
+                cy.get(home.profile).select('Working Professional')
+                cy.get(home.company).type('Maximl')
+                cy.get(home.role).type('QA Intern')
+                cy.get(home.location).type('Bengaluru')
+                cy.get(home.experience).select('0 - 1')
+                a.continue()
+                cy.get(home.skills).type('javascript').type('{enter}')
+                .type('cypress').type('{enter}')
+                a.continue()
+                cy.get(home.codingProfile).select('Beginner')
+                cy.get(home.reference).select('Word of Mouth')
+                cy.get(home.Interest).click().type('Software Testing and Automation').type('{enter}')
+                a.continue()
+            }
+        
+            else{
+                cy.log("pop up not visible")
+            }
+            })
     })
 
-    })
-    it('Check the presence of Guvi, GeekPoints, Rank, FaQ, and profile Logo', ()=>{
-        a.Check_TopNavigationBar_Visibility();
+    it('Test the presence of Guvi Logo', ()=>{
+        a.Login();
+        cy.get(home.GuviLogo).should('be.visible')
     })
 
-    it('Check Faq button Navigation', ()=>{
+    it('Test the presence of GeekPoints Logo', ()=>{
+        a.Login();
+        cy.get(home.GeekPoints).should('be.visible')
+    })
+
+    it('Test the presence of Rank Logo', ()=>{
+        a.Login();
+        cy.get(home.Rank).should('be.visible')
+    })
+
+    it('Test the presence of FaQ Logo', ()=>{
+        a.Login();
+        cy.get(home.FaQ).should('be.visible')
+    })
+
+    it('Test the presence of profile Logo', ()=>{
+        a.Login();
+        cy.get(home.ProfileAvatar).should('be.visible')
+    })
+
+    it('Test Faq button Navigation', ()=>{
+        a.Login();
         cy.get(home.FaQ).should('be.visible').click();
         a.Check_Title_and_Url('FAQ | GUVI','https://www.guvi.in/faq/')
         cy.get(home.FaQMessage).should('be.visible').and('have.text', 'Frequently Asked Questions')
     })
 
-    it('Check course Banner', ()=>{
+    it('Test course Banner', ()=>{
+        a.Login();
         cy.get(home.CourseBanner).should('be.visible').click();
         a.Check_Title_and_Url('Zen Class - Career Programs from GUVI','https://www.guvi.in/zen-class/')
         cy.get(home.GuviLogo2).should('be.visible')
         cy.get(home.CourseDetails).should('be.visible')
     })
 
-    it('Check left side options page navigation', ()=>{
+    it('Test guvi homepage icons navigation', ()=>{
+        a.Login();
         //click courses in the left side of page
         cy.get(home.CourseNav).click();
         a.Check_TopNavigationBar_Visibility();
@@ -140,12 +179,48 @@ describe('Guvi Home', ()=>{
         a.Check_Title_and_Url("GUVI - Learn Practice Get Hired", "https://forum.guvi.in/")
     })
 
-    // it('Course Library', ()=>{
+    // it.only('Course Library', ()=>{
     //     //Check Automic Course
+    //     a.Login();
+    //     cy.get(home.AutomicLibraryParent).within(()=>{
+    //     let l = cy.get("[class='course-tag atomic']").length
+    //       for(let i=0; i<l; i++){
+    //       cy.get("[class='course-tag atomic']").eq(i).should('have.text', "Atomic")
+    //     }
+    //     })
     // })
+
+    //Course library
+    it('Test whether the Atomic Library contains only Atomic courses.', () => {
+        a.Login();
+        cy.get(home.AtomicLibraryMessage).eq(0).should('have.text', 'Courses are available for Free learning but Certification comes at a nominal fee.')
+        cy.get(home.AtomicLibraryParent).within(() => {
+       
+        //Test the Atomic tag is present under all atomic courses
+        a.Test_CourseTag(home.AtomicCourses,'Atomic')
+
+        //Test Learn for FREE is present under all atomic courses
+        a.Test_CourseTag(home.AtomicFreeCourse,'Learn for FREE')
+       
+        });
+      });
+
+      it.only('Test whether the Essential Library contains only Essential courses.', () => {
+        a.Login();
+        cy.get(home.EssentialLibraryParent).within(() => {
+        a.Test_CourseTag(home.EssentialCourses,'Essential')
+        a.Test_CourseTag(home.EssentialFreeCourse, "Learn for FREE")
+          
+       });
+
+
+
+        });
+});
+      
 
 
 
     
-})
+
 
