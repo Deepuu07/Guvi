@@ -49,6 +49,17 @@ export const home={
     "AtomicFreeCourse" : ".freeCourseCustom",
     "EssentialLibraryParent" : "#essentialLib",
     "EssentialCourses" : "[class='course-tag essential']",
-    "EssentialFreeCourse" : ".freeCourseCustom"
+    "EssentialFreeCourse" : ".freeCourseCustom",
+    "EssentialFreeCertificate" : ".free-certificate",
+    "Categories": "#cardCategories",
+    "CategoryType" : "[class='col-sm-3 col-6']",
+    "premiumLibraryParent" : "#premiumLib",
+    "PremiumCourse" : "[class='course-tag premium']",
+    "CourseLanguageParent" : "#languageCardSection",
+    "courseLanguage" : "[class='col-sm-2 col-6 pt-sm-0 pt-2']",
+    "FreeLibrary" : "#contact-tab",
+    "FreeLibraryParent" : "#freeLib",
+    "FreeCourses" : "[class='course-tag free']"
+
 
 }

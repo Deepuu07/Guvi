@@ -21,7 +21,20 @@ module.exports = defineConfig({
       "InvalidPassowrd2" : "12345",
       "InvalidPassword3" : "Deep",
       "InvalidMobileNo" : "70108",
-      "ExistingEmail" : "deepakrao7010@gmail.com"
+      "ExistingEmail" : "deepakrao7010@gmail.com",
+      "NotRegisteredEmail" : "deepakrao9786@gmail.com",
+      "LandingPageTitle" : "GUVI | Learn to code in your native language",
+      "LandingPageUrl" : "https://www.guvi.in/",
+      "SigninTitle" : 'Sign In | GUVI',
+      "SigninUrl" : 'https://www.guvi.in/sign-in/',
+      "ForgotPasswordTitle" : "Forgot Password | GUVI",
+      "ForgotPasswordUrl" : 'https://www.guvi.in/forgot-password/',
+      "SignUpUrl" : 'https://www.guvi.in/register/',
+      "SignUpTitle" : "Sign Up | GUVI",
+      "HomepageUrl" : "https://www.guvi.in/courses/",
+      "HomepageTitle" : 'GUVI | courses',
+      "RegisterStatus" : 'https://www.guvi.in/status/?register=true'
+
     }
     
   },
