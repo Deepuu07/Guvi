@@ -59,7 +59,9 @@ export const home={
     "courseLanguage" : "[class='col-sm-2 col-6 pt-sm-0 pt-2']",
     "FreeLibrary" : "#contact-tab",
     "FreeLibraryParent" : "#freeLib",
-    "FreeCourses" : "[class='course-tag free']"
-
+    "FreeCourses" : "[class='course-tag free']",
+    "AtomicEntireTag" : "[class='col-lg-3 col-md-4 col-xs-12 p-2']",
+    "VideoPlayerParent" : "#courses-video-page",
+    "VideoPlayer" : "[class='embed-responsive embed-responsive-21by9 video-div video-wrap']"
 
 }

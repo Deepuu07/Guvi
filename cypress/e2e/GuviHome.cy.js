@@ -1,6 +1,7 @@
 import { Log } from "../support/Utilities/LoginLocators";
 import { home } from "../support/Utilities/GuviHomeLocators";
 import {guvi} from "../support/pageObjects/Guvi_home";
+import 'cypress-if'
 //import { beforeEach } from "mocha";
 const a = new guvi();
 describe('Guvi Home', ()=>{ 
@@ -271,8 +272,42 @@ describe('Guvi Home', ()=>{
 
     });
 
+    it.only('Test course enrollment functionality along with my courses', ()=>{
 
+      a.Login();
+      // cy.get(home.AtomicLibraryParent).within(() => {
+      //   cy.get(home.AtomicEntireTag).then( (ele)=>{
+      //     let l=ele.length;
+      //     cy.log(l);
+      //     for(let i=1; i<l; i++){
+      //       cy.get(home.AtomicEntireTag).eq(i).click();
+      //       const expUrl = "https://www.guvi.in/courses/"
+      //       cy.url().if('contains', expUrl).then(()=>{
+              
+      //       })
+      //     }
+      //   });
+        
+      // 
 
+      let conditionSatisfied = [false];
+      let l=16
+      for(let i=1; i<=l && !conditionSatisfied[0]; i++){
+        cy.get(home.AtomicEntireTag).eq(i).click();
+        cy.get("[class='bg-white']").then((body) => {
+        if (body.find("#atomicEnroll").length == 1) {
+        cy.wait(3000);
+        cy.get("#atomicEnroll").should('be.visible')
+        conditionSatisfied[0]=true; 
+      }
+      else{
+        cy.go('back')
+      }
+       
+      })
+    }
+
+  });
 
 
 });
