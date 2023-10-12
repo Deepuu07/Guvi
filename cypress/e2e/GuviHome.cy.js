@@ -272,47 +272,186 @@ describe('Guvi Home', ()=>{
 
     });
 
-    it.only('Test course enrollment functionality along with my courses', ()=>{
+    it('Test course enrollment functionality along with my courses', ()=>{
 
       a.Login();
-      // cy.get(home.AtomicLibraryParent).within(() => {
-      //   cy.get(home.AtomicEntireTag).then( (ele)=>{
-      //     let l=ele.length;
-      //     cy.log(l);
-      //     for(let i=1; i<l; i++){
-      //       cy.get(home.AtomicEntireTag).eq(i).click();
-      //       const expUrl = "https://www.guvi.in/courses/"
-      //       cy.url().if('contains', expUrl).then(()=>{
-              
-      //       })
-      //     }
-      //   });
-        
-      // 
 
       let conditionSatisfied = [false];
-      let l=16
-      for(let i=1; i<=l && !conditionSatisfied[0]; i++){
-        cy.get(home.AtomicEntireTag).eq(i).click();
-        cy.get("[class='bg-white']").then((body) => {
-        if (body.find("#atomicEnroll").length == 1) {
-        cy.wait(3000);
-        cy.get("#atomicEnroll").should('be.visible')
-        conditionSatisfied[0]=true; 
+      cy.wrap(conditionSatisfied).then((conditionSatisfied)=>{
+        let l=16
+        let j=0
+        for(let i=1; i<=l && !conditionSatisfied[j]; i++){
+          cy.get(home.AtomicEntireTag).eq(i).click();
+          cy.get("[class='bg-white']").then((body) => {
+            if (body.find("#atomicEnroll").length === 1) {
+            cy.wait(3000);
+            cy.get("#atomicEnroll").should('be.visible').then( ()=>{
+              conditionSatisfied[j] = true;
+            })
+            
+          }
+          else{
+            cy.go('back')
+          }
+           
+          })
       }
-      else{
-        cy.go('back')
-      }
-       
       })
-    }
+    
 
   });
+
+ 
+
+//   it.only('Test', ()=>{
+//     a.Login();
+//     cy.get(home.sortby).click();
+//     cy.get(home.popularity).click();
+//     cy.get(home.AtomicLibraryParent).within(() => {
+//       let l=cy.get(home.EnrolledCount).length;
+//       cy.log(l);
+//       //Highest course entrolled number
+//       let num =[]
+//      cy.wait(3000)
+//       let tc= cy.get(home.EnrolledCount).eq(0).invoke('text').then((tc)=>{
+//         const number = tc.match(/\d+/)[0];
+//         const result = parseInt(number, 10);
+//         cy.log(result)
+//         num.push(result);
+//       })
+//       cy.log(num)
+//       for (let i = 1; i < l; i++) {
+//         let tc= cy.get(home.EnrolledCount).eq(i).invoke('text').then((tc)=>{
+//           const number = tc.match(/\d+/)[0];
+//           const result = parseInt(number, 10);
+//           expect(num[0]).to.be.gt(result)
+//         })
+//       }
+//   })
+
+// })
+it('Test popularity for atomic course', () => {
+  a.Login();
+  cy.get(home.sortby).click();
+  cy.get(home.popularity).click();
+  cy.get(home.AtomicLibraryParent).within(() => {
+    cy.get(home.EnrolledCount).its('length').then((length) => {
+      cy.log(length);
+
+      // Highest course enrolled number
+      const num = [];
+
+      // We use cy.wrap() to ensure that 'num' is a Cypress Chainable
+      cy.wrap(num).then((num) => {
+        cy.wait(3000);
+
+        cy.get(home.EnrolledCount).eq(0).invoke('text').then((tc) => {
+          const number = tc.match(/\d+/)[0];
+          const result = parseInt(number, 10);
+          cy.log(result);
+          num.push(result);
+
+          // Use Cypress expect inside the promise
+          cy.expect(num).to.have.lengthOf(1);
+        });
+
+        for (let i = 1; i < length; i++) {
+          cy.get(home.EnrolledCount).eq(i).invoke('text').then((tc) => {
+            const number = tc.match(/\d+/)[0];
+            const result = parseInt(number, 10);
+            cy.log(result);
+            expect(num[0]).to.be.greaterThan(result);
+          });
+        }
+      });
+    });
+  });
+});
+
+it('Test popularity for Essential course', () => {
+  a.Login();
+  cy.get(home.sortby).click();
+  cy.get(home.popularity).click();
+  cy.get(home.EssentialLibraryParent).within(() => {
+    cy.get(home.EnrolledCount).its('length').then((length) => {
+      cy.log(length);
+
+      // Highest course enrolled number
+      const num = [];
+
+      // We use cy.wrap() to ensure that 'num' is a Cypress Chainable
+      cy.wrap(num).then((num) => {
+        cy.wait(3000);
+
+        cy.get(home.EnrolledCount).eq(0).invoke('text').then((tc) => {
+          const number = tc.match(/\d+/)[0];
+          const result = parseInt(number, 10);
+          cy.log(result);
+          num.push(result);
+
+          // Use Cypress expect inside the promise
+          cy.expect(num).to.have.lengthOf(1);
+        });
+
+        for (let i = 1; i < length; i++) {
+          cy.get(home.EnrolledCount).eq(i).invoke('text').then((tc) => {
+            const number = tc.match(/\d+/)[0];
+            const result = parseInt(number, 10);
+            cy.log(result);
+            expect(num[0]).to.be.greaterThan(result);
+          });
+        }
+      });
+    });
+  });
+});
+it('Test popularity for premium course', () => {
+  a.Login();
+  cy.get(home.sortby).click();
+  cy.get(home.popularity).click();
+  cy.get(home.premiumLibraryParent).within(() => {
+    cy.get(home.EnrolledCount).its('length').then((length) => {
+      cy.log(length);
+
+      // Highest course enrolled number
+      const num = [];
+
+      // We use cy.wrap() to ensure that 'num' is a Cypress Chainable
+      cy.wrap(num).then((num) => {
+        cy.wait(3000);
+
+        cy.get(home.EnrolledCount).eq(0).invoke('text').then((tc) => {
+          const number = tc.match(/\d+/)[0];
+          const result = parseInt(number, 10);
+          cy.log(result);
+          num.push(result);
+
+          // Use Cypress expect inside the promise
+          cy.expect(num).to.have.lengthOf(1);
+        });
+
+        for (let i = 1; i < length; i++) {
+          cy.get(home.EnrolledCount).eq(i).invoke('text').then((tc) => {
+            const number = tc.match(/\d+/)[0];
+            const result = parseInt(number, 10);
+            cy.log(result);
+            expect(num[0]).to.be.greaterThan(result);
+          });
+        }
+      });
+    });
+  });
+});
+
+
+
+
+
+
 
 
 });
       
-
 
 
     

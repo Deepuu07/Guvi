@@ -37,5 +37,21 @@ export class guvi{
             }
           });
     }
+    
+    EnrollCourseVisibilityCheck(){
+        cy.get("[class='bg-white']").then((body) => {
+            if (body.find("#atomicEnroll").length === 1) {
+            cy.wait(3000);
+            cy.get("#atomicEnroll").should('be.visible')
+            return true;
+          }
+          else{
+            cy.go('back')
+          }
+           
+          })
+    }
+    
+
 
 }

@@ -62,6 +62,9 @@ export const home={
     "FreeCourses" : "[class='course-tag free']",
     "AtomicEntireTag" : "[class='col-lg-3 col-md-4 col-xs-12 p-2']",
     "VideoPlayerParent" : "#courses-video-page",
-    "VideoPlayer" : "[class='embed-responsive embed-responsive-21by9 video-div video-wrap']"
+    "VideoPlayer" : "[class='embed-responsive embed-responsive-21by9 video-div video-wrap']",
+    "sortby" : "[class='dropdown mr-2']",
+    "popularity" : "[data-id='enrolled_0']",
+    "EnrolledCount" : "[class='d-inline']"
 
 }
