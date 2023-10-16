@@ -1,7 +1,16 @@
 import {home} from "../Utilities/GuviHomeLocators";
+import { Log } from "../Utilities/LoginLocators"
 export class guvi{
 
     Login(){
+        cy.session('login', ()=>{
+            cy.visit(Cypress.env('Lpage'));
+            cy.get(Log.EmailInputField).type(Cypress.env('Email')).should('have.value', Cypress.env('Email'));
+            cy.get(Log.PasswordInputField).type(Cypress.env('Password')).should('have.value', Cypress.env('Password'));
+            cy.get(Log.loginButton).click(); 
+            cy.wait(9000);
+        }
+        )
         cy.visit(Cypress.env('Lpage'));
     }
 
@@ -37,19 +46,9 @@ export class guvi{
             }
           });
     }
-    
-    EnrollCourseVisibilityCheck(){
-        cy.get("[class='bg-white']").then((body) => {
-            if (body.find("#atomicEnroll").length === 1) {
-            cy.wait(3000);
-            cy.get("#atomicEnroll").should('be.visible')
-            return true;
-          }
-          else{
-            cy.go('back')
-          }
-           
-          })
+
+    clickExplore(){
+        cy.get(home.Explore).should('be.visible').click();
     }
     
 

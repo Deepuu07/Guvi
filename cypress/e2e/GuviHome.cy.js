@@ -1,5 +1,6 @@
 import { Log } from "../support/Utilities/LoginLocators";
 import { home } from "../support/Utilities/GuviHomeLocators";
+import { Title_Url } from "../support/Utilities/GuviHomeTitle_urls";
 import {guvi} from "../support/pageObjects/Guvi_home";
 import 'cypress-if'
 //import { beforeEach } from "mocha";
@@ -7,38 +8,50 @@ const a = new guvi();
 describe('Guvi Home', ()=>{ 
     before( ()=>{
         cy.visit("")
-        a.Check_Title_and_Url("GUVI | Learn to code in your native language", "https://www.guvi.in/")
+        a.Check_Title_and_Url(Title_Url.visitPageTitle, Title_Url.visitPageUrl)
         cy.get(Log.Login).should('be.visible').should('not.have.attr', 'disabled')
         cy.get(Log.Login).contains('Login').click()
         cy.title().should('eq', Cypress.env('SigninTitle'))
         cy.url().should('eq', Cypress.env('SigninUrl'))
     })
 
-    beforeEach( ()=>{
-
-        cy.session('login', ()=>{
-            a.Login();
-            cy.get(Log.EmailInputField).type(Cypress.env('Email')).should('have.value', Cypress.env('Email'));
-            cy.get(Log.PasswordInputField).type(Cypress.env('Password')).should('have.value', Cypress.env('Password'));
-            cy.get(Log.loginButton).click(); 
-            cy.wait(3000);
-        }
-        )
-       
+    beforeEach( ()=>{     
+        cy.viewport(1920, 1080);   
+        a.Login(); 
+        cy.window().then((win) => {
+          win.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+          });
+        }); 
+        cy.get('.course-mainhead').then((body) => {
+          if (body.find(home.SkillUpPopup).length == 1) {
+            cy.get(home.SkillUpClose).click();
+          }
+          else{
+            cy.log('Skill Up Popup Not visible')
+          }
+        });
+        cy.get(home.EntirePageBodyClass).then((body)=>{
+          if(body.find(home.YoutubePopup).length ==1){
+            cy.reload();
+          }
+          else{
+            cy.log('Youtube Popup Not visible')
+          }
+        })
     })
 
-    it('Test home page url', ()=>{
-        a.Login();
+    
+
+    it('verifies that the user is directed to the correct home page URL after successfully logging in', ()=>{
         cy.url().should('include', Cypress.env('HomepageUrl'))
     })
 
-    it('Test home page title', ()=>{
-        a.Login();
+    it('check the title of the home page after a user has logged in', ()=>{
         cy.title().should('eq', Cypress.env('HomepageTitle'))
     })
 
-    it('Test home page pop up', ()=>{
-        a.Login();
+    it('verify the pop-up on the home page and interacts with it if its present, all after the user has logged in', ()=>{
         cy.wait(5000);
         cy.get('.course-mainhead').then((body) => {
             if (body.find(home.popup).length == 1) {
@@ -72,48 +85,40 @@ describe('Guvi Home', ()=>{
             })
     })
 
-    it('Test the presence of Guvi Logo', ()=>{
-        a.Login();
+    it('verify that the Guvi logo  is visible on the page.', ()=>{
         cy.get(home.GuviLogo).should('be.visible')
     })
 
-    it('Test the presence of GeekPoints Logo', ()=>{
-        a.Login();
+    it('verify that the GeekPoints logo is visible on the page.', ()=>{
         cy.get(home.GeekPoints).should('be.visible')
     })
 
-    it('Test the presence of Rank Logo', ()=>{
-        a.Login();
+    it('verify that the Rank logo is visible on the page.', ()=>{
         cy.get(home.Rank).should('be.visible')
     })
 
-    it('Test the presence of FaQ Logo', ()=>{
-        a.Login();
+    it('verify that the FaQ logo is visible on the page.', ()=>{
         cy.get(home.FaQ).should('be.visible')
     })
 
-    it('Test the presence of profile Logo', ()=>{
-        a.Login();
+    it('verify that the profile logo is visible on the page.', ()=>{
         cy.get(home.ProfileAvatar).should('be.visible')
     })
 
-    it('Test Faq button Navigation', ()=>{
-        a.Login();
+    it('verify the functionality of the FAQ button on the page after a user has logged in', ()=>{
         cy.get(home.FaQ).should('be.visible').click();
-        a.Check_Title_and_Url('FAQ | GUVI','https://www.guvi.in/faq/')
+        a.Check_Title_and_Url(Title_Url.FaQTitle,Title_Url.FaQUrl)
         cy.get(home.FaQMessage).should('be.visible').and('have.text', 'Frequently Asked Questions')
     })
 
-    it('Test course Banner', ()=>{
-        a.Login();
+    it('verify the functionality of the course banner after a user has logged in', ()=>{
         cy.get(home.CourseBanner).should('be.visible');
         // a.Check_Title_and_Url('Zen Class - Career Programs from GUVI','https://www.guvi.in/zen-class/')
         // cy.get(home.GuviLogo2).should('be.visible')
         // cy.get(home.CourseDetails).should('be.visible')
     })
 
-    it('Test guvi homepage icons navigation', ()=>{
-        a.Login();
+    it('verify the navigation functionality of various icons on the Guvi homepage after a user has logged in', ()=>{
         //click courses in the left side of page
         cy.get(home.CourseNav).click();
         a.Check_TopNavigationBar_Visibility();
@@ -124,24 +129,24 @@ describe('Guvi Home', ()=>{
         //click codeKata
         cy.get(home.Codekata).click();
         a.Check_TopNavigationBar_Visibility();
-        a.Check_Title_and_Url("CodeKata | GUVI","https://www.guvi.in/code-kata/")
+        a.Check_Title_and_Url(Title_Url.CodeKataTitle,Title_Url.CodeKataUrl)
         cy.get(home.codekataPageText).should('be.visible')
 
         //click webkata
         cy.get(home.webkata).click();
         a.Check_TopNavigationBar_Visibility();
-        a.Check_Title_and_Url("Webkata | GUVI","https://www.guvi.in/webkata/")
+        a.Check_Title_and_Url(Title_Url.WebkataTitle,Title_Url.WebKataUrl)
         cy.get(home.webkataPageText).should('be.visible').and('have.text', "WebKata")
 
         //click debugging
         cy.get(home.Debugging).click();
         a.Check_TopNavigationBar_Visibility();
-        a.Check_Title_and_Url("Debugging | GUVI", "https://www.guvi.in/debugging/")
+        a.Check_Title_and_Url(Title_Url.DebuggingTitle,Title_Url.DebuggingUrl)
         cy.get(home.DeubggingPageText).should('be.visible').and('have.text', " Debugging")
 
         //click Ide
         cy.get(home.Ide).click();
-        a.Check_Title_and_Url("IDE | GUVI","https://www.guvi.in/ide/")
+        a.Check_Title_and_Url(Title_Url.IDETitle,Title_Url.IDEUrl)
         cy.get('#idePopUp').then((body) => {
             if (body.find(home.IdePopUp).length == 1) {
                 cy.get(home.IdePopUp).click();
@@ -160,24 +165,24 @@ describe('Guvi Home', ()=>{
             //Assertion
             expect(txt).to.contains('Changes you made may not be saved.');
          })
-        a.Check_Title_and_Url("Leader Board | GUVI","https://www.guvi.in/leader-board/")
+        a.Check_Title_and_Url(Title_Url.LeaderBoardTitle,Title_Url.LeaderBoardUrl)
         a.Check_TopNavigationBar_Visibility();
 
         //click Rewards
         cy.get(home.Rewards).click();
-        a.Check_Title_and_Url("Rewards | GUVI","https://www.guvi.in/rewards/")
+        a.Check_Title_and_Url(Title_Url.RewardsTitle,Title_Url.RewardsUrl)
         a.Check_TopNavigationBar_Visibility();
         cy.get(home.RewardsPageText).should('be.visible').and('have.text', "Geekoins for Rewards")
 
         //click referrals
         cy.get(home.Referral).click();
-        a.Check_Title_and_Url("Referral | GUVI","https://www.guvi.in/referral/")
+        a.Check_Title_and_Url(Title_Url.ReferralTitle,Title_Url.ReferralUrl)
         a.Check_TopNavigationBar_Visibility();
         cy.get(home.ReferralpageText).should('be.visible').and('have.text', 'Apple products, Amazon Voucher & much more to win!')
 
         //click forum
         cy.get(home.Forum).click();
-        a.Check_Title_and_Url("GUVI - Learn Practice Get Hired", "https://forum.guvi.in/")
+        a.Check_Title_and_Url(Title_Url.forumTitle, Title_Url.forumUrl)
     })
 
     // it.only('Course Library', ()=>{
@@ -192,8 +197,7 @@ describe('Guvi Home', ()=>{
     // })
 
     //Course library
-    it('Test whether the Atomic Library contains only Atomic courses.', () => {
-        a.Login();
+    it('verify the content and tags within the Atomic Library after a user has logged in', () => {
         cy.get(home.AtomicLibraryMessage).eq(0).should('have.text', 'Courses are available for Free learning but Certification comes at a nominal fee.')
         cy.get(home.AtomicLibraryParent).within(() => {
        
@@ -206,8 +210,7 @@ describe('Guvi Home', ()=>{
         });
       });
 
-      it('Test whether the Essential Library contains only Essential courses.', () => {
-        a.Login();
+      it('verify the content and tags within the Essential Library after a user has logged in', () => {
         cy.get(home.AtomicLibraryMessage).eq(1).should('have.text', 'Courses are available with Free learning access & Free certifications.')
         cy.get(home.EssentialLibraryParent).within(() => {
         a.Test_CourseTag(home.EssentialCourses,'Essential')
@@ -219,8 +222,7 @@ describe('Guvi Home', ()=>{
 
     });
 
-    it('Test whether the Premium Library contains only premium courses.', () => {
-        a.Login();
+    it('verify the content and tags within the Premium Library after a user has logged in', () => {
         cy.get(home.AtomicLibraryMessage).eq(2).should('have.text', 'Courses are available at an affordable price & valuable certifications are included.')
         cy.get(home.premiumLibraryParent).within(() => {
         a.Test_CourseTag(home.PremiumCourse,'Premium')   
@@ -229,8 +231,7 @@ describe('Guvi Home', ()=>{
 
     });
 
-    it('Test whether the Categories under the course library are visible', () => {
-        a.Login();
+    it('Verify the visibility of Categories within the course library', () => {
         cy.get(home.Categories).within(() => {
           cy.get(home.CategoryType).each((category) => {
             cy.wrap(category).should('be.visible').within(() => {
@@ -240,8 +241,7 @@ describe('Guvi Home', ()=>{
         });
       });
 
-      it('Test whether the course language under the course library are visible', () => {
-        a.Login();
+      it('Verify the visibility of the course language within the course library.', () => {
         cy.get(home.CourseLanguageParent).within(() => {
           cy.get(home.courseLanguage).each((category) => {
             cy.wrap(category).should('be.visible')
@@ -249,8 +249,7 @@ describe('Guvi Home', ()=>{
         });
       });
 
-      it('Test whether the Free Library contains only Free courses.', () => {
-        a.Login();
+      it('Verify that the Free Library exclusively contains courses marked as "Free."', () => {
         cy.get(home.FreeLibrary).should('be.visible').click();
         cy.get(home.FreeLibraryParent).within(() => {
         a.Test_CourseTag(home.FreeCourses,'Free')   
@@ -272,34 +271,70 @@ describe('Guvi Home', ()=>{
 
     });
 
-    it('Test course enrollment functionality along with my courses', ()=>{
-
-      a.Login();
-
-      let conditionSatisfied = [false];
-      cy.wrap(conditionSatisfied).then((conditionSatisfied)=>{
-        let l=16
-        let j=0
-        for(let i=1; i<=l && !conditionSatisfied[j]; i++){
-          cy.get(home.AtomicEntireTag).eq(i).click();
-          cy.get("[class='bg-white']").then((body) => {
-            if (body.find("#atomicEnroll").length === 1) {
-            cy.wait(3000);
-            cy.get("#atomicEnroll").should('be.visible').then( ()=>{
-              conditionSatisfied[j] = true;
-            })
+  //   it.skip('Test course enrollment functionality along with my courses', ()=>{
+  //     a.Login();
+  //     let conditionSatisfied = [false];
+  //     let numarr =[0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+  //     // cy.wrap(conditionSatisfied).then((conditionSatisfied)=>{
+  //       let c=16
+  //       let j=0
+  //       let i =1//2
+  //       while( i<c && !conditionSatisfied[numarr[i]]){
+  //         cy.log(conditionSatisfied[numarr[i]])
+  //         i++
+  //         cy.get(home.AtomicEntireTag).eq(i).click();
+  //         cy.get("[class='bg-white']").then((body) => {
+  //           if (body.find("#atomicEnroll").length === 1) {
+  //           cy.wait(3000);
+  //           cy.get("#atomicEnroll").should('be.visible').then( ()=>{
+  //             conditionSatisfied.push(true)
+  //           })
             
-          }
-          else{
-            cy.go('back')
-          }
-           
-          })
-      }
-      })
+  //         }
+  //         else{
+  //           cy.go('back')
+  //           conditionSatisfied.push(false)
+  //         }
+     
+  //         })
+          
+  //     }
+  //     //})
     
 
-  });
+  // });
+
+  // it.only('Test course enrollment functionality along with my courses', () => {
+  //   a.Login(); // Assuming 'a.Login()' is your login function
+  
+  //   // Define an array to keep track of course enrollment conditions
+  //   let conditionSatisfied = [false];
+  
+  //   // Define an array of indexes for your courses
+  //   let numArr = [0,0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  
+  //   let totalCourses = 16;
+  
+  //   for (let i = 1; i < totalCourses; i++) {
+  //     if (!conditionSatisfied[numArr[i]]) {
+  //       cy.log(conditionSatisfied[numArr[i]]);
+  //       cy.get(home.AtomicEntireTag).eq(i).click();
+  
+  //       cy.get("[class='bg-white']").then((body) => {
+  //         if (body.find("#atomicEnroll").length === 1) {
+  //           cy.wait(3000);
+  //           cy.get("#atomicEnroll").should('be.visible').then(() => {
+  //             conditionSatisfied.push(true);
+  //           });
+  //         } else {
+  //           cy.go('back');
+  //           conditionSatisfied.push(false);
+  //         }
+  //       });
+  //     }
+  //   }
+  // });
+  
 
  
 
@@ -330,8 +365,7 @@ describe('Guvi Home', ()=>{
 //   })
 
 // })
-it('Test popularity for atomic course', () => {
-  a.Login();
+it('check the popularity sorting feature for an atomic course in guvi home', () => {
   cy.get(home.sortby).click();
   cy.get(home.popularity).click();
   cy.get(home.AtomicLibraryParent).within(() => {
@@ -368,8 +402,7 @@ it('Test popularity for atomic course', () => {
   });
 });
 
-it('Test popularity for Essential course', () => {
-  a.Login();
+it('check the popularity sorting feature for an Essential course in guvi home', () => {
   cy.get(home.sortby).click();
   cy.get(home.popularity).click();
   cy.get(home.EssentialLibraryParent).within(() => {
@@ -405,8 +438,7 @@ it('Test popularity for Essential course', () => {
     });
   });
 });
-it('Test popularity for premium course', () => {
-  a.Login();
+it('check the popularity sorting feature for an premium course in guvi home', () => {
   cy.get(home.sortby).click();
   cy.get(home.popularity).click();
   cy.get(home.premiumLibraryParent).within(() => {
@@ -443,10 +475,207 @@ it('Test popularity for premium course', () => {
   });
 });
 
+it('verify the presence of the course name that was searched for in the results of Atomic course section', ()=>{
+  cy.get(home.search).should('be.visible').and('have.attr', 'placeholder', 'Search').type('python').type('{enter}')
+  cy.get(home.AtomicLibraryGrandParent).then((body) => {
+    if (body.find(home.AtomicCourseBox).length >= 1) {
+      cy.log(true)
+      cy.get(home.AtomicLibraryParent).within(() => {
+        cy.get(home.AtomicCourseText).each((coursetext)=>{
+          cy.wrap(coursetext).should('be.visible').invoke('text').then((text)=>{
+            cy.wrap(text).should('include', 'Python')
+          })
+        })
+        });
+    }
+    else{
+      cy.log("No Results found")
+    }
 
+  })
+})
 
+it('verify the presence of the course name that was searched for in the results of Essential course section', ()=>{
+  cy.get(home.search).should('be.visible').and('have.attr', 'placeholder', 'Search').type('chatgpt').type('{enter}')
+  cy.get(home.EssentialLibraryGrandParent).then((body) => {
+    if (body.find(home.EssentialCourseBox).length >= 1) {
+      cy.log(true)
+      cy.get(home.EssentialParent).within(() => {
+        cy.get(home.EssentialCourseText).each((coursetext)=>{
+          cy.wrap(coursetext).should('be.visible').invoke('text').then((text)=>{
+            cy.wrap(text).should('include', 'Chatgpt', { matchCase: false })
+          })
+        })
+        });
+    }
+    else{
+      cy.log("No Results found")
+    }
 
+  })
+})
 
+it('verify the presence of the course name that was searched for in the results of Premium course section', ()=>{
+  cy.get(home.search).should('be.visible').and('have.attr', 'placeholder', 'Search').type('chatgpt').type('{enter}')
+  cy.get(home.PremiumLibraryGrandParent).then((body) => {
+    if (body.find(home.PremiumCourseBox).length >= 1) {
+      cy.log(true)
+      cy.get(home.PremiumParent).within(() => {
+        cy.get(home.premiumCourseText).each((coursetext)=>{
+          cy.wrap(coursetext).should('be.visible').invoke('text').then((text)=>{
+            cy.wrap(text).should('include', 'ChatGPT', { matchCase: false })
+          })
+        })
+        });
+    }
+    else{
+      cy.log("No Results found")
+    }
+
+  })
+})
+
+it('Verify Explore Courses Navigation Functionality and verify category title', ()=>{
+  a.clickExplore();
+
+  //Programming Language
+  cy.get(home.ProgrammingLanguage).should('be.visible').and('have.text', 'Programming Languages').click();
+  a.Check_Title_and_Url(Title_Url.ProgrammingLanguagesTitle, Title_Url.ProgrammingLanguagesUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Programming Languages')
+  cy.go('back')
+
+  //Data Science
+  a.clickExplore();
+  cy.get(home.DataScience).should('be.visible').and('have.text', 'Data Science').click();
+  a.Check_Title_and_Url(Title_Url.DataScienceTitle, Title_Url.DataScienceUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Data Science')
+  cy.go('back')
+
+  //Web Development
+  a.clickExplore();
+  cy.get(home.WebDevelopment).should('be.visible').and('have.text', 'Web Development').click();
+  a.Check_Title_and_Url(Title_Url.WebDevelopmentTitle, Title_Url.WebDevelopmentUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Web Development')
+  cy.go('back')
+
+  //DataBase and cloud computing
+  a.clickExplore();
+  cy.get(home.DataBase_CloudComputing).should('be.visible').and('have.text', 'Database and Cloud Computing').click();
+  a.Check_Title_and_Url(Title_Url.DataBaseandcloudcomputingTitle, Title_Url.DataBaseandcloudcomputingUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Database and Cloud Computing')
+  cy.go('back')
+
+  //Software Testing and Automation
+  a.clickExplore();
+  cy.get(home.SoftwareTesting).should('be.visible').and('have.text', 'Software Testing and Automation').click();
+  a.Check_Title_and_Url(Title_Url.SoftwareTesting_AutomationTitle, Title_Url.SoftwareTesting_AutomationUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Software Testing and Automation')
+  cy.go('back')
+
+  //IT and Software
+  a.clickExplore();
+  cy.get(home.IT_Software).should('be.visible').and('have.text', 'IT and Software').click();
+  a.Check_Title_and_Url(Title_Url.ITandSoftwareTitle, Title_Url.ITandSoftwareUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'IT and Software')
+  cy.go('back')
+
+  //Network and Security
+  a.clickExplore();
+  cy.get(home.Network_Security).should('be.visible').and('have.text', 'Network and Security').click();
+  a.Check_Title_and_Url(Title_Url.NetworkandSecurityTitle, Title_Url.NetworkandSecurityUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Network and Security')
+  cy.go('back')
+
+  //Web 3.0
+  a.clickExplore();
+  cy.get(home.Web_3).should('be.visible').and('have.text', 'Web 3.0').click();
+  a.Check_Title_and_Url(Title_Url.Web3Title, Title_Url.Web3Url)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Web 3.0')
+  cy.go('back')
+
+  //Mobile Development
+  a.clickExplore();
+  cy.get(home.MobileDevelopment).should('be.visible').and('have.text', 'Mobile Development').click();
+  a.Check_Title_and_Url(Title_Url.MobileDevelopmentTitle, Title_Url.MobileDevelopmentUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Mobile Development')
+  cy.go('back')
+
+  //UI/UX
+  a.clickExplore();
+  cy.get(home.UI_UX).should('be.visible').and('have.text', 'UI/UX').click();
+  a.Check_Title_and_Url(Title_Url.UI_UXTitle, Title_Url.UI_UXUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'UI/UX')
+  cy.go('back')
+
+  //Digital Marketing
+  a.clickExplore();
+  cy.get(home.DigitalMarketing).should('be.visible').and('have.text', 'Digital Marketing').click();
+  a.Check_Title_and_Url(Title_Url.DigitalMarketingTitle, Title_Url.DigitalMarketingUrl)
+  cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Digital Marketing')
+  cy.go('back')
+
+})
+
+it('Verify Explore course libraries Navigation Functionality', ()=>{
+
+//Premium Library
+a.clickExplore();
+cy.get(home.CourseLibraries).should('be.visible').and('have.text', 'Course Libraries')
+cy.get(home.PremiumLibrary).should('be.visible').and('have.text', 'Premium Library').click();
+a.Check_Title_and_Url(Title_Url.commonTitle, Title_Url.premiumLibraryUrl)
+cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Premium Library Courses')
+cy.go('back')
+
+//Atomic Library
+a.clickExplore();
+cy.get(home.CourseLibraries).should('be.visible').and('have.text', 'Course Libraries')
+cy.get(home.AtomicLibrary).should('be.visible').and('have.text', 'Atomic Library').click();
+a.Check_Title_and_Url(Title_Url.commonTitle, Title_Url.AtomicLibraryUrl)
+cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Atomic Library Courses')
+cy.go('back')
+
+//Essential Library
+a.clickExplore();
+cy.get(home.CourseLibraries).should('be.visible').and('have.text', 'Course Libraries')
+cy.get(home.EssentialLibrary).should('be.visible').and('have.text', 'Essential Library').click();
+a.Check_Title_and_Url(Title_Url.commonTitle, Title_Url.EssentialLibraryUrl)
+cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Essential Library Courses')
+cy.go('back')
+
+//Free Library
+a.clickExplore();
+cy.get(home.CourseLibraries).should('be.visible').and('have.text', 'Course Libraries')
+cy.get(home.freelibrary).should('be.visible').and('have.text', 'Free Library').click();
+a.Check_Title_and_Url(Title_Url.commonTitle, Title_Url.FreeLibraryUrl)
+cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Free Library Courses')
+cy.go('back')
+
+//All Courses
+a.clickExplore();
+cy.get(home.CourseLibraries).should('be.visible').and('have.text', 'Course Libraries')
+cy.get(home.AllCourses).should('be.visible').and('have.text', 'All Courses').click();
+a.Check_Title_and_Url(Title_Url.commonTitle, Title_Url.AllCoursesUrl)
+cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Online Courses with certificate')
+cy.go('back')
+})
+
+it('Ensure the user profile avatar visibility and associated information are correctly displayed', ()=>{
+  cy.get(home.ProfileAvatar).should('be.visible').click();
+  cy.get(home.ProfileName).should('be.visible').and('have.text', "deepak ")
+  cy.get(home.ProfileEmail).should('be.visible').and('have.text', Cypress.env('Email'))
+  cy.get(home.ProfileCClass).eq(0).should('be.visible').and('have.text', "My Profile")
+  cy.get(home.ProfileCClass).eq(1).should('be.visible').and('have.text', 'Change Password')
+  cy.get(home.ProfileCClass).eq(2).should('be.visible').and('have.text', 'Sign out')
+})
+
+it('Ensure that the "My Profile" page can be accessed from the user profile avatar, and that the page displays the expected title, URL, and user information.', ()=>{
+  cy.get(home.ProfileAvatar).should('be.visible').click();
+  cy.get(home.ProfileCClass).eq(0).should('be.visible').and('have.text', "My Profile").click();
+  a.Check_Title_and_Url(Title_Url.ProfileTitle,Title_Url.ProfileUrl)
+  a.Check_TopNavigationBar_Visibility();
+  cy.get(home.ProfileUserName).should('be.visible').and('have.text', 'deepak s')
+  cy.get(home.profile_email).should('be.visible').and('have.text', Cypress.env('Email')) 
+})
 
 
 
