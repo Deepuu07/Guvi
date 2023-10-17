@@ -23,14 +23,6 @@ describe('Guvi Home', ()=>{
             e.preventDefault();
           });
         }); 
-        cy.get('.course-mainhead').then((body) => {
-          if (body.find(home.SkillUpPopup).length == 1) {
-            cy.get(home.SkillUpClose).click();
-          }
-          else{
-            cy.log('Skill Up Popup Not visible')
-          }
-        });
         cy.get(home.EntirePageBodyClass).then((body)=>{
           if(body.find(home.YoutubePopup).length ==1){
             cy.reload();
@@ -39,6 +31,7 @@ describe('Guvi Home', ()=>{
             cy.log('Youtube Popup Not visible')
           }
         })
+      
     })
 
     
@@ -271,40 +264,46 @@ describe('Guvi Home', ()=>{
 
     });
 
-  //   it.skip('Test course enrollment functionality along with my courses', ()=>{
-  //     a.Login();
-  //     let conditionSatisfied = [false];
-  //     let numarr =[0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-  //     // cy.wrap(conditionSatisfied).then((conditionSatisfied)=>{
-  //       let c=16
-  //       let j=0
-  //       let i =1//2
-  //       while( i<c && !conditionSatisfied[numarr[i]]){
-  //         cy.log(conditionSatisfied[numarr[i]])
-  //         i++
-  //         cy.get(home.AtomicEntireTag).eq(i).click();
-  //         cy.get("[class='bg-white']").then((body) => {
-  //           if (body.find("#atomicEnroll").length === 1) {
-  //           cy.wait(3000);
-  //           cy.get("#atomicEnroll").should('be.visible').then( ()=>{
-  //             conditionSatisfied.push(true)
-  //           })
+    it.skip('Test course enrollment functionality along with my courses', ()=>{
+      a.Login();
+     // cy.get('#home-tab').click();
+      //let conditionSatisfied = [false];
+      //let numarr =[0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+      // cy.wrap(conditionSatisfied).then((conditionSatisfied)=>{
+        // let c=16
+       // let j=0
+        let i =1
+        let j=true;
+        while(j==true){
+          // cy.log(conditionSatisfied[i])
+         
+          cy.get(home.AtomicEntireTag).eq(i).click();
+          // cy.get("[class='bg-white']").then((body) => {
+           // if (body.find("#atomicEnroll").length === 1 && j==true) {
+            if(cy.get(".im-interested-box" ).length==1 && j==true){
+            cy.wait(3000);
+            cy.get("#atomicEnroll").should('be.visible').then( ()=>{
+              j=false
+            })
+          }
             
-  //         }
-  //         else{
-  //           cy.go('back')
-  //           conditionSatisfied.push(false)
-  //         }
-     
-  //         })
+          //}
+          else{
+            cy.go('back')
+            //conditionSatisfied.push(false)
+          }
           
-  //     }
-  //     //})
+     
+         // })
+         
+          i++
+     }
+      //})
     
 
-  // });
+  });
 
-  // it.only('Test course enrollment functionality along with my courses', () => {
+  // it('Test course enrollment functionality along with my courses', () => {
   //   a.Login(); // Assuming 'a.Login()' is your login function
   
   //   // Define an array to keep track of course enrollment conditions
@@ -325,8 +324,10 @@ describe('Guvi Home', ()=>{
   //           cy.wait(3000);
   //           cy.get("#atomicEnroll").should('be.visible').then(() => {
   //             conditionSatisfied.push(true);
+            
   //           });
-  //         } else {
+  //         }
+  //          else {
   //           cy.go('back');
   //           conditionSatisfied.push(false);
   //         }
@@ -535,7 +536,7 @@ it('verify the presence of the course name that was searched for in the results 
   })
 })
 
-it('Verify Explore Courses Navigation Functionality and verify category title', ()=>{
+it('Verify the navigation functionality of Explore Courses and confirm the accuracy of the category title', ()=>{
   a.clickExplore();
 
   //Programming Language
@@ -616,7 +617,7 @@ it('Verify Explore Courses Navigation Functionality and verify category title', 
 
 })
 
-it('Verify Explore course libraries Navigation Functionality', ()=>{
+it('Test the Explore course libraries navigation functionality', ()=>{
 
 //Premium Library
 a.clickExplore();
@@ -659,7 +660,7 @@ cy.get(home.CategoryTitle).should('be.visible').and('have.text', 'Online Courses
 cy.go('back')
 })
 
-it('Ensure the user profile avatar visibility and associated information are correctly displayed', ()=>{
+it('Verify that the user profile avatar and associated information are correctly displayed', ()=>{
   cy.get(home.ProfileAvatar).should('be.visible').click();
   cy.get(home.ProfileName).should('be.visible').and('have.text', "deepak ")
   cy.get(home.ProfileEmail).should('be.visible').and('have.text', Cypress.env('Email'))
@@ -675,6 +676,36 @@ it('Ensure that the "My Profile" page can be accessed from the user profile avat
   a.Check_TopNavigationBar_Visibility();
   cy.get(home.ProfileUserName).should('be.visible').and('have.text', 'deepak s')
   cy.get(home.profile_email).should('be.visible').and('have.text', Cypress.env('Email')) 
+})
+
+it.only('Test change password and sign out functionality', ()=>{
+  a.clickProfileAvatar();
+  a.clickChangePassword();
+  a.CheckTitleAndLabelOfChangePasswordPage();
+  a.Enter_old_and_new_password_clickConfirmBtn('Deepak@1','Deepak@2','Deepak@2')
+ 
+
+  //Test signout Functionality
+  a.clickProfileAvatar();
+  a.clickSignOut();
+  a.Check_Title_and_Url(Title_Url.visitPageTitle, Title_Url.visitPageUrl)
+  cy.get(Log.Login).contains('Login').click()
+  cy.title().should('eq', Cypress.env('SigninTitle'))
+  cy.url().should('eq', Cypress.env('SigninUrl'))
+
+  //Login with new password
+  a.Enter_New_Login_Password('Deepak@2')
+
+//Change to old password
+  a.clickProfileAvatar();
+  a.clickChangePassword();
+  a.Enter_old_and_new_password_clickConfirmBtn('Deepak@2','Deepak@1','Deepak@1')
+
+  //Signout
+  a.clickProfileAvatar();
+  a.clickSignOut();
+  
+
 })
 
 

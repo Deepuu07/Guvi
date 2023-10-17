@@ -11,7 +11,7 @@ module.exports = defineConfig({
       "Lpage" : "sign-in/",
       "FName" : "Deepu",
       "Lname" : "S",
-      "Email" : "deepusgj@gmail.com",
+      "Email" : "deepakrao9786@gmail.com",
       "Password" : "Deepak@1",
       "MobileNo" : "7010786384",
       "FNameInvalid" : "Deepakrao123",

@@ -105,7 +105,16 @@ export const home={
     "ProfileEmail" : "[class='email-wrap text-secondary']",
     "ProfileCClass" : "[class='dropdown-item text-secondary mt-2']",
     "ProfileUserName" : "#user-name",
-    "profile_email" : "[class='col-lg-6 col-xs-12'] > h5"
+    "profile_email" : "[class='col-lg-6 col-xs-12'] > h5",
+    "changePasswordTitle" : ".col > h1",
+    "oldPasswordlabel" : "[for='oldPasswordInput']",
+    "oldPasswordInput" : "#oldPasswordInput",
+    "NewPasswordlabel" : "[for='newPasswordInput']",
+    "NewPasswordInput" : "#newPasswordInput",
+    "confirmPasswordlabel" : "[for='confirmPasswordInput']",
+    "confirmPasswordInput" : "#confirmPasswordInput",
+    "confirmButton" : "#change_btn",
+    "PasswordConfirmMsg" : "#warn"
     
 
 }
