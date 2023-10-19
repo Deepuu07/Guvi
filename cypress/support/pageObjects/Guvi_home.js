@@ -117,6 +117,16 @@ export class guvi{
       cy.get(home.ProfileCClass).eq(2).should('be.visible').and('have.text', "Sign out").click();
     }
 
+   Close_Youtube_PopUp(){
+    if (Cypress.$('#SubscribePopUp').length === 1) {
+      // Handle the popup as needed
+      // For example, you can close it or perform the necessary action
+      cy.get('#subscribeNowButton').invoke('removeAttr', 'target').click(); // Click the button to dismiss the popup
+      // You may need additional code here to interact with the popup or close it
+    }
+
+   }
+
 
     
 

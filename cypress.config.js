@@ -6,6 +6,7 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     "baseUrl" : "https://www.guvi.in/",
+    //"experimentalRunAllSpecs" : true,
     env:{
       "Rpage" : "register/",
       "Lpage" : "sign-in/",
@@ -22,7 +23,7 @@ module.exports = defineConfig({
       "InvalidPassword3" : "Deep",
       "InvalidMobileNo" : "70108",
       "ExistingEmail" : "deepakrao7010@gmail.com",
-      "NotRegisteredEmail" : "deepakrao9786@gmail.com",
+      "NotRegisteredEmail" : "jayashree9294@gmail.com",
       "LandingPageTitle" : "GUVI | Learn to code in your native language",
       "LandingPageUrl" : "https://www.guvi.in/",
       "SigninTitle" : 'Sign In | GUVI',
